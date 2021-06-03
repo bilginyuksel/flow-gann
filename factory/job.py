@@ -45,4 +45,4 @@ class Job:
 
 
 def create_job(id, process_times: List[int]) -> Job:
-    return Job(id, process_times)
+    return Job(id, process_times.copy())

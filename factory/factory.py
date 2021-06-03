@@ -1,9 +1,9 @@
 import logging
-from statistics import MachineStatistics
 from typing import List
-from machine import Machine
-from job import Job
-from global_time import Timer
+from factory.statistics import MachineStatistics
+from factory.machine import Machine
+from factory.job import Job
+from factory.global_time import Timer
 
 
 class Factory:
