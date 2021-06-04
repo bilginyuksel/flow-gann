@@ -33,16 +33,13 @@ class Factory:
         starting_machine = self.machines[0]
         starting_machine.set_job(self.next_job())
         while self.__has_incomplete_jobs():
-            self.timer.run_timer()
             if starting_machine.has_available_partition() and self.has_next_job():
                 starting_machine.set_job(self.next_job())
+                continue
+            self.timer.run_timer()
             self.__execute_machines()
-            # logging.info(self.job_done)
-            # logging.info(self.statistics.machine_records)
 
-        self.statistics.pretty_print()
-
-    def notify(self, machine_id, job_id):
+    def notify(self, machine_id, job_id, machine_name):
         # pass job to next handler
         finished_job = self.jobs[job_id]
         next_handler = finished_job.next_handler()

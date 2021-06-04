@@ -1,3 +1,4 @@
+from collections import deque
 from random import randint
 
 
@@ -17,33 +18,52 @@ def order_crossover(p1, p2):
     if len(p1) != len(p2):
         return ValueError("order_crossover parent array lengths have be to equal")
 
+    p1, p2 = p1.copy(), p2.copy()
+
     n = len(p1)
-    temp_random_points = [randint(0, n), randint(0, n)]
-    start_point = min(temp_random_points)
-    end_point = max(temp_random_points)
-
-    c1, c2 = [0 for _ in range(n)], [0 for _ in range(n)]
-    # Put constant genes
-    # Example result would be: [ , , 3, 5, 7, , ]
-    for i in range(start_point, end_point):
-        c1[i] = p1[i]
-        c2[i] = p2[i]
-
-    # remove cross duplicates
-    for i in range(start_point, end_point):
-        if p1[i] in c2:
-            c2.remove(p1[i])
-        if p2[i] in c1:
-            c1.remove(p2[i])
     
-    # add right elements of parent to left elements of child
-    for i in range(end_point, n):
-        c1[i-end_point] = p2[i]
-        c2[i-end_point] = p1[i]
+    start_idx = randint(0, n//2)
+    end_idx = randint(n//2, n-1)
 
-    # add left elements of parent to right elements of child
-    for i in range(0, end_point):
-        c1[end_point+i] = p2[i]
-        c2[end_point+i] = p1[i]
+    p1_const_genes = p1[start_idx: end_idx]
+    p2_const_genes = p2[start_idx: end_idx]
 
-    return c1, c2 
+    c1, c2 = [], []
+
+    # last part
+    for i in range(end_idx, n):
+        c1.append(p1[i])
+        c2.append(p2[i])
+
+    # first part
+    for i in range(0, start_idx):
+        c1.append(p1[i])
+        c2.append(p2[i])
+
+    # add const genes
+    c1 += p1_const_genes
+    c2 += p2_const_genes
+
+    # remove duplicate
+    for p1_gene, p2_gene in zip(p1_const_genes, p2_const_genes):
+        if p1_gene in c1:
+            c1.remove(p1_gene)
+        if p2_gene in c2:
+            c2.remove(p2_gene)
+
+    child1 = deque(p1_const_genes.copy())
+    child2 = deque(p2_const_genes.copy())
+
+    for i in range(len(c1)):
+        if i > start_idx:
+            child2.appendleft(c1[i])
+        else:
+            child2.append(c1[i])
+        
+    for i in range(len(c2)):
+        if i > start_idx:
+            child1.appendleft(c2[i])
+        else:
+            child1.append(c2[i])
+
+    return list(child1), list(child2)

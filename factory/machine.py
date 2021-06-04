@@ -8,7 +8,7 @@ class Machine:
 
     def __init__(self, id, partition=1, observers=[]) -> None:
         self.id = id
-        self.machine_id = "partition" + str(id)
+        self.machine_id = "m-" + str(id)+"."+str(partition)
         self.partition = partition
         self.job_queue = []
         self.observers = observers
@@ -32,20 +32,21 @@ class Machine:
         """
         run at each timespan spent inside a factory
         """
-        for job in self.active_jobs:
+        for partition, job in enumerate(self.active_jobs):
             if job is None or job.is_done(self.id):
                 continue
 
             job.execute(self.id)
             if job.is_done(self.id):
-                self.notifyAll(self.id, job.id)
+                machine_name = "machine-%d.%d" % (self.id, partition) 
+                self.notifyAll(self.id, job.id, machine_name)
 
         if len(self.job_queue) > 0 and self.has_available_partition():
             self.__set_job(self.job_queue.pop(0))
 
-    def notifyAll(self, machine_id, job_id):
+    def notifyAll(self, machine_id, job_id, machine_name):
         for observer in self.observers:
-            observer.notify(self.id, job_id)
+            observer.notify(self.id, job_id, machine_name)
 
     def __set_job(self, job):
         for i in range(len(self.active_jobs)):

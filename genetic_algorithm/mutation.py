@@ -12,7 +12,7 @@ def swap_mutation(arr):
 
     n = len(arr)
     first_pos = randint(0, n//2)
-    second_pos = randint(n//2, n)
+    second_pos = randint(n//2, n-1)
 
     arr[first_pos], arr[second_pos] = arr[second_pos], arr[first_pos]
 
@@ -28,7 +28,7 @@ def scramble_mutation(arr):
     
     n = len(arr)
     start_point = randint(0, n//2)
-    end_point = randint(0, n//2)
+    end_point = randint(n//2, n-1)
 
     shuffled_subset = sample(arr[start_point:end_point], end_point-start_point)
 
@@ -46,7 +46,7 @@ def inversion_mutation(arr):
     
     n = len(arr)
     start_point = randint(0, n//2)
-    end_point = randint(0, n//2)
+    end_point = randint(n//2, n-1)
 
     subset = arr[start_point:end_point]
 
