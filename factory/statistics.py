@@ -1,7 +1,3 @@
-from os import name
-from factory import job
-
-
 class MachineStatistics:
 
     def __init__(self, timer, machine_ids) -> None:

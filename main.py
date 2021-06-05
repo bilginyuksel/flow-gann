@@ -1,4 +1,5 @@
 import logging
+import pandas
 
 from factory import Factory, create_machine, create_job
 from genetic_algorithm import create_population, order_crossover, swap_mutation
@@ -41,6 +42,8 @@ def iterate(population, iteration=6, curr_iteration=0):
     for i, pop in enumerate(population):
         stats = execute_factory_cycle(pop)
         print("\n--  ITERATION %d / POPULATION %d --\n" % (curr_iteration+1, i+1))
+        df = pandas.DataFrame(pop)
+        print("TASK ORDER\n%s\n" % df.to_string(index= False))
         stats.pretty_print()
         population_results.append([i, stats.last_execution_time])
 
